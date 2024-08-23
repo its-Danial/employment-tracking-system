@@ -1,12 +1,10 @@
 /// <reference path="../../../adonisrc.ts" />
 /// <reference path="../../../config/inertia.ts" />
-
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
+
 import { createInertiaApp } from '@inertiajs/vue3'
-import PrimeVue from 'primevue/config'
-import type { DefineComponent } from 'vue'
-import { createSSRApp, h } from 'vue'
-import AppTheme from '~/themes/app-theme'
+
+import { type DefineComponent, createSSRApp, h } from 'vue'
 
 import '~/css/app.css'
 
@@ -27,9 +25,6 @@ createInertiaApp({
   setup({ el, App, props, plugin }) {
     createSSRApp({ render: () => h(App, props) })
       .use(plugin)
-      .use(PrimeVue, {
-        theme: AppTheme,
-      })
       .mount(el)
   },
 })

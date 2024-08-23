@@ -1,12 +1,11 @@
 <script lang="ts" setup>
 import { Head } from '@inertiajs/vue3'
 
-defineProps<{ version: number }>()
+import { Button } from '~/components/base/button'
+import { Label } from '~/components/base/label'
+import { Switch } from '~/components/base/switch'
 
-function toggleDarkMode() {
-  const element = document.querySelector('html')
-  element?.classList.toggle('app-dark')
-}
+defineProps<{ version: number }>()
 </script>
 
 <template>
@@ -16,6 +15,10 @@ function toggleDarkMode() {
     <div class="text-4xl font-bold tracking-tight sm:text-5xl">
       Malik Danial - AdonisJS {{ version }} x Inertia x Vue.js
     </div>
-    <Button label="Submit" type="button" @click="toggleDarkMode" />
+    <Button>Click me</Button>
+    <div class="flex items-center space-x-2">
+      <Switch id="airplane-mode" />
+      <Label for="airplane-mode">Airplane Mode</Label>
+    </div>
   </div>
 </template>
