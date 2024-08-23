@@ -1,11 +1,15 @@
 <script lang="ts" setup>
+import type { InferPageProps } from '@adonisjs/inertia/types'
+
 import { Head } from '@inertiajs/vue3'
+
+import type HomeController from '#controllers/home_controller'
 
 import { Button } from '~/components/base/button'
 import { Label } from '~/components/base/label'
 import { Switch } from '~/components/base/switch'
 
-defineProps<{ version: number }>()
+defineProps<{ version: InferPageProps<HomeController, 'index'>['version'] }>()
 </script>
 
 <template>
