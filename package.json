@@ -73,7 +73,6 @@
     "@adonisjs/static": "^1.1.1",
     "@adonisjs/vite": "^3.0.0",
     "@inertiajs/vue3": "^1.2.0",
-    "@radix-icons/vue": "^1.0.0",
     "@vinejs/vine": "^2.1.0",
     "@vue/server-renderer": "^3.4.38",
     "@vueuse/core": "^11.0.3",
