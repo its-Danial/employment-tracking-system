@@ -80,3 +80,7 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+#nprogress .bar {
+  height: 4px !important;
+}
