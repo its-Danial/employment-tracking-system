@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { Primitive, type PrimitiveProps } from 'radix-vue'
 import type { HTMLAttributes } from 'vue'
+
+import { LoaderCircle } from 'lucide-vue-next'
+import { Primitive, type PrimitiveProps } from 'radix-vue'
 
 import { cn } from '#lib/utils'
 
@@ -10,10 +12,12 @@ interface Props extends PrimitiveProps {
   variant?: ButtonVariants['variant']
   size?: ButtonVariants['size']
   class?: HTMLAttributes['class']
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   as: 'button',
+  loading: false,
 })
 </script>
 
@@ -22,7 +26,12 @@ const props = withDefaults(defineProps<Props>(), {
     :as="as"
     :as-child="asChild"
     :class="cn(buttonVariants({ variant, size }), props.class)"
+    :disabled="loading"
   >
-    <slot />
+    <template v-if="loading">
+      <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+      Please wait
+    </template>
+    <slot v-else />
   </Primitive>
 </template>
