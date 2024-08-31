@@ -7,6 +7,7 @@ export default {
 </script>
 
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3'
 import { Button } from '~/components/base/button'
 import { Input } from '~/components/base/input'
 import { Label } from '~/components/base/label'
@@ -43,7 +44,7 @@ import { Label } from '~/components/base/label'
     </div>
     <div class="text-center text-sm">
       Already have an account?
-      <a href="#" class="underline"> Sign in </a>
+      <Link href="/login" class="underline"> Sign in </Link>
     </div>
   </div>
 </template>
