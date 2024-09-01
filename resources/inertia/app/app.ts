@@ -7,6 +7,7 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import { type DefineComponent, createSSRApp, h } from 'vue'
 
 import '~/css/app.css'
+import AppLayout from '~/layouts/app_layout.vue'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -15,11 +16,14 @@ createInertiaApp({
 
   title: (title) => `${title} - ${appName}`,
 
-  resolve: (name) => {
-    return resolvePageComponent(
+  resolve: async (name) => {
+    const page = await resolvePageComponent(
       `../pages/${name}.vue`,
       import.meta.glob<DefineComponent>('../pages/**/*.vue')
     )
+
+    page.default.layout = page.default.layout || AppLayout
+    return page
   },
 
   setup({ el, App, props, plugin }) {
