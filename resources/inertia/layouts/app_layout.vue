@@ -24,13 +24,21 @@ import {
   DropdownMenuTrigger,
 } from '~/components/base/dropdown-menu'
 import { Input } from '~/components/base/input'
-import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTrigger,
+} from '~/components/base/sheet'
 </script>
 
 <template>
   <div class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <!-- Sidebar -->
     <div class="hidden border-r bg-muted/40 md:block">
-      <div class="flex h-full max-h-screen flex-col gap-2">
+      <div class="sticky top-0 flex h-screen flex-col gap-2">
         <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <a href="/" class="flex items-center gap-2 font-semibold">
             <Package2 class="h-6 w-6" />
@@ -42,7 +50,7 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
           </Button>
         </div>
         <div class="flex-1">
-          <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
+          <nav class="grid items-start space-y-1 px-2 py-2 text-sm font-medium lg:px-4">
             <a
               href="/"
               class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
@@ -56,9 +64,9 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
             >
               <ShoppingCart class="h-4 w-4" />
               Orders
-              <Badge class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                6
-              </Badge>
+              <Badge class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+                >6</Badge
+              >
             </a>
             <a
               href="#"
@@ -99,7 +107,10 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
       </div>
     </div>
     <div class="flex flex-col">
-      <header class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+      <!-- Top Navigation -->
+      <header
+        class="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 backdrop-blur supports-[backdrop-filter]:bg-muted/40 lg:h-[60px] lg:px-6"
+      >
         <Sheet>
           <SheetTrigger as-child>
             <Button variant="outline" size="icon" class="shrink-0 md:hidden">
@@ -107,12 +118,14 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
               <span class="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" class="flex flex-col">
-            <nav class="grid gap-2 text-lg font-medium">
+          <SheetContent aria-describedby="nav-links" side="left" class="flex flex-col">
+            <SheetHeader>
               <a href="#" class="flex items-center gap-2 text-lg font-semibold">
                 <Package2 class="h-6 w-6" />
                 <span class="sr-only">Acme Inc</span>
               </a>
+            </SheetHeader>
+            <nav class="grid gap-2 text-lg font-medium">
               <a
                 href="#"
                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
@@ -154,7 +167,7 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
                 Analytics
               </a>
             </nav>
-            <div class="mt-auto">
+            <SheetFooter class="mt-auto">
               <Card>
                 <CardHeader>
                   <CardTitle>Upgrade to Pro</CardTitle>
@@ -163,10 +176,12 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button size="sm" class="w-full"> Upgrade </Button>
+                  <SheetClose as-child>
+                    <Button size="sm" class="w-full"> Upgrade </Button>
+                  </SheetClose>
                 </CardContent>
               </Card>
-            </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
         <div class="w-full flex-1">
@@ -198,24 +213,8 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/base/sheet'
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <!-- Note: Content -->
-      <main class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-        <div class="flex items-center">
-          <h1 class="text-lg font-semibold md:text-2xl">Inventory</h1>
-        </div>
-        <div
-          class="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
-        >
-          <slot />
-          <!-- <div class="flex flex-col items-center gap-1 text-center">
-            <h3 class="text-2xl font-bold tracking-tight">You have no products</h3>
-            <p class="text-sm text-muted-foreground">
-              You can start selling as soon as you add a product.
-            </p>
-            <Button class="mt-4"> Add Product </Button>
-          </div> -->
-        </div>
-      </main>
+      <!-- Note: Page Content -->
+      <slot />
     </div>
   </div>
 </template>
