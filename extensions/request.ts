@@ -10,9 +10,6 @@ declare module '@adonisjs/core/http' {
 
 Request.macro('tenant', async function (this: Request): Promise<Tenant> {
   const subdomain = this.hostname()?.split('.')[0]
-  console.log(' -------------------------------------------------')
-  console.log('file: http_context.ts:13 --> subdomain:', subdomain)
-  console.log(' -------------------------------------------------')
 
   if (!subdomain) {
     throw new Error('no subdomain found')

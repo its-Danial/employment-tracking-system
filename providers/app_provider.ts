@@ -6,6 +6,6 @@ export default class AppProvider {
    * The container bindings have booted
    */
   async boot() {
-    await import('#extensions/http_context')
+    await import('#extensions/request')
   }
 }
