@@ -10,6 +10,8 @@ export default class extends BaseSchema {
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
 
+      table.foreign('tenant_id').references('id').inTable('tenants')
+
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
     })
