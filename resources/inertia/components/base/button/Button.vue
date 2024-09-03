@@ -28,10 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
     :class="cn(buttonVariants({ variant, size }), props.class)"
     :disabled="loading"
   >
-    <template v-if="loading">
-      <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
-      Please wait
-    </template>
-    <slot v-else />
+    <LoaderCircle v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
+    <slot />
   </Primitive>
 </template>
