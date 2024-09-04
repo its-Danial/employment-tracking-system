@@ -20,9 +20,10 @@ const form = useForm('CreateUser', {
 const loading = ref(false)
 
 const handleSubmit = () => {
-  loading.value = true
-  form.post('/register')
-  loading.value = false
+  form.post('/register', {
+    onStart: () => (loading.value = true),
+    onFinish: () => (loading.value = false),
+  })
 }
 </script>
 

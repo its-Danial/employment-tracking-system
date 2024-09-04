@@ -19,9 +19,10 @@ const form = useForm('LoginUser', {
 const loading = ref(false)
 
 const handleSubmit = () => {
-  loading.value = true
-  form.post('/login')
-  loading.value = false
+  form.post('/login', {
+    onStart: () => (loading.value = true),
+    onFinish: () => (loading.value = false),
+  })
 }
 </script>
 
