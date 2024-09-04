@@ -18,7 +18,7 @@ export default class TenantGuardMiddleware {
       throw new Exception('Subdomain not provided')
     }
 
-    ctx.tenant = await Tenant.findByOrFail('subdomain', subdomain)
+    ctx.tenant = await Tenant.query().where({ subdomain }).preload('branding').firstOrFail()
 
     const output = await next()
     return output
