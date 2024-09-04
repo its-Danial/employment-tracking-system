@@ -11,7 +11,12 @@ const inertiaConfig = defineConfig({
    * Data that should be shared with all rendered pages
    */
   sharedData: {
-    user: (ctx) => ctx.auth.user?.serialize(),
+    user: (ctx) =>
+      ctx.auth.user?.serialize({
+        fields: {
+          omit: ['tenantId', 'createdAt', 'updatedAt'],
+        },
+      }),
     errors: (ctx) => {
       // Get all flash messages except 'notification'
       const allErrors = ctx.session?.flashMessages.all()
@@ -22,11 +27,10 @@ const inertiaConfig = defineConfig({
     },
     notification: (ctx) => ctx.session.flashMessages.get('notification'),
     tenant: (ctx) =>
-      ctx.tenant.serialize({ fields: ['id', 'name', 'title'] }) as {
-        id: number
-        name: string
-        title: string
-      },
+      ctx.tenant.serialize({
+        fields: { pick: ['id', 'name', 'title'] },
+        relations: { branding: { fields: { omit: ['tenantId', 'createdAt', 'updatedAt'] } } },
+      }),
   },
 
   /**
@@ -41,5 +45,29 @@ const inertiaConfig = defineConfig({
 export default inertiaConfig
 
 declare module '@adonisjs/inertia/types' {
-  export interface SharedProps extends InferSharedProps<typeof inertiaConfig> {}
+  export interface SharedProps extends InferSharedProps<typeof inertiaConfig> {
+    user: {
+      id: string
+      roleId: string
+      firstName: string
+      lastName: string
+      image: string
+      email: string
+    }
+    errors: Record<string, any>
+    notification: Record<string, string>
+    tenant: {
+      id: string
+      name: string
+      title: string
+      branding: {
+        id: number
+        logo: string
+        primaryColor: string
+        secondaryColor: string
+        tagline: string
+      }
+    }
+    [key: string]: any
+  }
 }
