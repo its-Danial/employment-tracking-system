@@ -1,9 +1,15 @@
-import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 import { compose } from '@adonisjs/core/helpers'
 import hash from '@adonisjs/core/services/hash'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 import { DateTime } from 'luxon'
+
+// Extend to respect tenantId
+import { withAuthFinder } from '../mixins/auth_lucid.js'
+import Role from './role.js'
+import Tenant from './tenant.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -11,11 +17,25 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 })
 
 export default class User extends compose(BaseModel, AuthFinder) {
+  static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
+
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare fullName: string | null
+  declare tenantId: number
+
+  @column()
+  declare roleId: number
+
+  @column()
+  declare firstName: string
+
+  @column()
+  declare lastName: string
+
+  @column()
+  declare image: string | null
 
   @column()
   declare email: string
@@ -28,4 +48,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  @belongsTo(() => Role)
+  declare role: BelongsTo<typeof Role>
+
+  @belongsTo(() => Tenant)
+  declare tenant: BelongsTo<typeof Tenant>
 }
