@@ -10,7 +10,6 @@ export default class extends BaseSchema {
       table.string('title').notNullable().unique()
       table.string('subdomain').notNullable().unique()
       table.string('company_website').nullable()
-      table.string('feedback_email').nullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
