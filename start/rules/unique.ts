@@ -1,6 +1,5 @@
 // isUnique macro with tenant-aware logic
 import db from '@adonisjs/lucid/services/db'
-
 import vine, { VineNumber, VineString } from '@vinejs/vine'
 import type { FieldContext } from '@vinejs/vine/types'
 

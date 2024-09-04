@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { SharedProps } from '@adonisjs/inertia/types'
-
 import { router, usePage } from '@inertiajs/vue3'
 
 import { computed, watchEffect } from 'vue'
