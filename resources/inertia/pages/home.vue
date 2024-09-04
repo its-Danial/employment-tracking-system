@@ -1,13 +1,9 @@
 <script lang="ts" setup>
-import type { InferPageProps, SharedProps } from '@adonisjs/inertia/types'
+import type { SharedProps } from '@adonisjs/inertia/types'
 
 import { Head, usePage } from '@inertiajs/vue3'
 
 import { computed } from 'vue'
-
-import type HomeController from '#controllers/home_controller'
-
-defineProps<{ tenantName: InferPageProps<HomeController, 'index'>['tenantName'] }>()
 
 const page = usePage<SharedProps>()
 

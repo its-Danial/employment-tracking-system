@@ -5,7 +5,7 @@ export default class HomeController {
    * Display home page
    */
   async index({ inertia }: HttpContext) {
-    return inertia.render('home', { version: 6 })
+    return inertia.render('home')
   }
 
   //   /**
