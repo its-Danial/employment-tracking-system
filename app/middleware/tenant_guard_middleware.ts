@@ -1,9 +1,24 @@
+import { Exception } from '@adonisjs/core/exceptions'
 import { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 
-export default class TenantMiddleware {
-  async handle({ request }: HttpContext, next: NextFn) {
-    // await request.tenant()
+import Tenant from '#models/tenant'
+
+declare module '@adonisjs/core/http' {
+  interface HttpContext {
+    tenant: Tenant
+  }
+}
+
+export default class TenantGuardMiddleware {
+  async handle(ctx: HttpContext, next: NextFn) {
+    const subdomain = ctx.request.hostname()?.split('.')[0]
+
+    if (!subdomain) {
+      throw new Exception('Subdomain not provided')
+    }
+
+    ctx.tenant = await Tenant.findByOrFail('subdomain', subdomain)
 
     const output = await next()
     return output
