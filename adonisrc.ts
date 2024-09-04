@@ -48,7 +48,12 @@ export default defineConfig({
   | List of modules to import before starting the application.
   |
   */
-  preloads: [() => import('#start/routes'), () => import('#start/kernel'), () => import('#start/rules/unique')],
+  preloads: [
+    () => import('#start/routes/auth'),
+    () => import('#start/routes/home'),
+    () => import('#start/kernel'),
+    () => import('#start/rules/unique'),
+  ],
 
   /*
   |--------------------------------------------------------------------------
