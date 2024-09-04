@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import type { SharedProps } from '@adonisjs/inertia/types'
+
+import { router, usePage } from '@inertiajs/vue3'
+
+import { computed, watchEffect } from 'vue'
+
 import {
   Bell,
   CircleUser,
@@ -12,29 +18,26 @@ import {
   Users,
 } from 'lucide-vue-next'
 
-import { Badge } from '~/components/base/badge'
-import { Button } from '~/components/base/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/base/card'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '~/components/base/dropdown-menu'
-import { Input } from '~/components/base/input'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTrigger,
-} from '~/components/base/sheet'
+import { toast } from '~/components/base/toast/use-toast'
+
+const page = usePage<SharedProps>()
+
+const tenant = computed(() => page.props.tenant)
+
+const notification = computed(() => page.props.notification)
+
+watchEffect(() => {
+  if (!notification.value) return
+  toast({ title: notification.value.title, description: notification.value.message })
+})
+
+function logout() {
+  router.post('logout')
+}
 </script>
 
 <template>
+  <Toaster />
   <div class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
     <!-- Sidebar -->
     <div class="hidden border-r bg-muted/40 md:block">
@@ -42,7 +45,7 @@ import {
         <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <a href="/" class="flex items-center gap-2 font-semibold">
             <Package2 class="h-6 w-6" />
-            <span class="">Acme Inc</span>
+            <span>{{ tenant.title }}</span>
           </a>
           <Button variant="outline" size="icon" class="ml-auto h-8 w-8">
             <Bell class="h-4 w-4" />
@@ -209,7 +212,7 @@ import {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem @click="logout">Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </header>

@@ -1,4 +1,9 @@
+<script lang="ts" setup>
+import Toaster from '~/components/base/toast/Toaster.vue'
+</script>
+
 <template>
+  <Toaster />
   <div
     class="flex min-h-screen w-full items-center justify-center lg:grid lg:grid-cols-2 lg:items-stretch"
   >
