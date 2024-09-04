@@ -1,8 +1,9 @@
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
+import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 
 import { DateTime } from 'luxon'
 
+import Branding from './branding.js'
 import User from './user.js'
 
 export default class Tenant extends BaseModel {
@@ -18,11 +19,20 @@ export default class Tenant extends BaseModel {
   @column()
   declare subdomain: string
 
+  @column()
+  declare companyWebsite: string
+
+  @column()
+  declare feedbackEmail: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @hasOne(() => Branding)
+  declare branding: HasOne<typeof Branding>
 
   @hasMany(() => User)
   declare users: HasMany<typeof User>
