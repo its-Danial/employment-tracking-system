@@ -12,8 +12,21 @@ const inertiaConfig = defineConfig({
    */
   sharedData: {
     user: (ctx) => ctx.auth.user?.serialize(),
-    errors: (ctx) => ctx.session?.flashMessages.get('errors'),
+    errors: (ctx) => {
+      // Get all flash messages except 'notification'
+      const allErrors = ctx.session?.flashMessages.all()
+      const filteredErrors = Object.fromEntries(
+        Object.entries(allErrors || {}).filter(([key]) => key !== 'notification')
+      )
+      return filteredErrors
+    },
     notification: (ctx) => ctx.session.flashMessages.get('notification'),
+    tenant: (ctx) =>
+      ctx.tenant.serialize({ fields: ['id', 'name', 'title'] }) as {
+        id: number
+        name: string
+        title: string
+      },
   },
 
   /**
