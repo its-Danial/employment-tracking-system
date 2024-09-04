@@ -1,11 +1,17 @@
 <script lang="ts" setup>
-import type { InferPageProps } from '@adonisjs/inertia/types'
+import type { InferPageProps, SharedProps } from '@adonisjs/inertia/types'
 
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage } from '@inertiajs/vue3'
+
+import { computed } from 'vue'
 
 import type HomeController from '#controllers/home_controller'
 
-defineProps<{ version: InferPageProps<HomeController, 'index'>['version'] }>()
+defineProps<{ tenantName: InferPageProps<HomeController, 'index'>['tenantName'] }>()
+
+const page = usePage<SharedProps>()
+
+const user = computed(() => page.props.user)
 </script>
 
 <template>
@@ -14,10 +20,12 @@ defineProps<{ version: InferPageProps<HomeController, 'index'>['version'] }>()
     <div class="flex items-center">
       <h1 class="text-lg font-semibold md:text-2xl">Dashboard</h1>
     </div>
-    <div class="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
-      <div class="h-screen text-4xl font-bold tracking-tight sm:text-5xl">
-        Malik Danial - AdonisJS {{ version }} x Inertia x Vue.js
-      </div>
+    <div
+      class="flex flex-1 flex-col items-center justify-center rounded-lg border border-dashed shadow-sm"
+    >
+      <div class="font-bold tracking-tight">User email: {{ user.email }}</div>
+      <div class="font-bold tracking-tight">User email: {{ user.firstName }}</div>
+      <Button>Hello</Button>
     </div>
   </main>
 </template>
