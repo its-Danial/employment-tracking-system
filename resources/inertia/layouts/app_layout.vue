@@ -5,21 +5,24 @@ import { router, usePage } from '@inertiajs/vue3'
 import { computed, watchEffect } from 'vue'
 
 import {
-  Bell,
+  BriefcaseBusiness,
   CircleUser,
-  Home,
-  LineChart,
+  Handshake,
+  LayoutDashboard,
   Menu,
-  Package,
+  Newspaper,
   Package2,
+  PocketKnife,
   Search,
-  ShoppingCart,
-  Users,
+  Settings,
+  User,
 } from 'lucide-vue-next'
 
 import { toast } from '~/components/base/toast/use-toast'
 
 const page = usePage<SharedProps>()
+
+const user = computed(() => page.props.user)
 
 const tenant = computed(() => page.props.tenant)
 
@@ -33,6 +36,16 @@ watchEffect(() => {
 function logout() {
   router.post('logout')
 }
+
+const navLinks = [
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Batches', href: '/batches', icon: Newspaper },
+  { name: 'Jobs', href: '/jobs', icon: BriefcaseBusiness },
+  { name: 'Candidates', href: '/candidates', icon: User },
+  { name: 'Skills', href: '/skills', icon: PocketKnife },
+  { name: 'Agents', href: '/agents', icon: Handshake },
+  { name: 'Settings', href: '/settings', icon: Settings },
+]
 </script>
 
 <template>
@@ -46,50 +59,18 @@ function logout() {
             <Package2 class="h-6 w-6" />
             <span>{{ tenant.title }}</span>
           </a>
-          <Button variant="outline" size="icon" class="ml-auto h-8 w-8">
-            <Bell class="h-4 w-4" />
-            <span class="sr-only">Toggle notifications</span>
-          </Button>
         </div>
         <div class="flex-1">
           <nav class="grid items-start space-y-1 px-2 py-2 text-sm font-medium lg:px-4">
             <a
-              href="/"
+              v-for="link in navLinks"
+              :key="link.name"
+              :href="link.href"
               class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              :class="{ 'bg-primary text-primary-foreground': page.url.startsWith(link.href) }"
             >
-              <Home class="h-4 w-4" />
-              Dashboard
-            </a>
-            <a
-              href="#"
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <ShoppingCart class="h-4 w-4" />
-              Orders
-              <Badge class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                >6</Badge
-              >
-            </a>
-            <a
-              href="#"
-              class="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-            >
-              <Package class="h-4 w-4" />
-              Products
-            </a>
-            <a
-              href="#"
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Users class="h-4 w-4" />
-              Customers
-            </a>
-            <a
-              href="#"
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <LineChart class="h-4 w-4" />
-              Analytics
+              <component :is="link.icon" class="h-4 w-4" />
+              {{ link.name }}
             </a>
           </nav>
         </div>
@@ -129,44 +110,14 @@ function logout() {
             </SheetHeader>
             <nav class="grid gap-2 text-lg font-medium">
               <a
-                href="#"
+                v-for="link in navLinks"
+                :key="link.name"
+                :href="link.href"
                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                :class="{ 'bg-primary text-primary-foreground': page.url.startsWith(link.href) }"
               >
-                <Home class="h-5 w-5" />
-                Dashboard
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-              >
-                <ShoppingCart class="h-5 w-5" />
-                Orders
-                <Badge
-                  class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                >
-                  6
-                </Badge>
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <Package class="h-5 w-5" />
-                Products
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <Users class="h-5 w-5" />
-                Customers
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <LineChart class="h-5 w-5" />
-                Analytics
+                <component :is="link.icon" class="h-5 w-5" />
+                {{ link.name }}
               </a>
             </nav>
             <SheetFooter class="mt-auto">
@@ -200,7 +151,11 @@ function logout() {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button id="user-menu" variant="secondary" size="icon" class="rounded-full">
+            <Avatar v-if="user.image" class="cursor-pointer">
+              <AvatarImage :src="user.image" :alt="user.firstName + ' ' + user.lastName" />
+              <AvatarFallback>{{ user.firstName[0] + user.lastName[0] }}</AvatarFallback>
+            </Avatar>
+            <Button v-else id="user-menu" variant="secondary" size="icon" class="rounded-full">
               <CircleUser class="h-5 w-5" />
               <span class="sr-only">Toggle user menu</span>
             </Button>
