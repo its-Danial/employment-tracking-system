@@ -22,9 +22,6 @@ export default class Tenant extends BaseModel {
   @column()
   declare companyWebsite: string
 
-  @column()
-  declare feedbackEmail: string
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
