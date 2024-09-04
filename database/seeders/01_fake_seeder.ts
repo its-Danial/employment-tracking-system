@@ -1,16 +1,13 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
+import { TenantFactory } from '#database/factories/tenant_factory'
 import { UserFactory } from '#database/factories/user_factory'
-import Tenant from '#models/tenant'
 
 export default class extends BaseSeeder {
-  async run() {
-    // Write your database queries inside the run method
-    await Tenant.createMany([
-      { id: 1, name: 'tenant one', title: 'The Tenant One', subdomain: 'localhost' },
-      { id: 2, name: 'tenant two', title: 'The Tenant Two', subdomain: 'development' },
-    ])
+  static environment = ['development']
 
+  async run() {
+    await TenantFactory.with('branding').createMany(2)
     await UserFactory.createMany(5)
   }
 }
