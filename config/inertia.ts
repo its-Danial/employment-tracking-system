@@ -18,13 +18,16 @@ const inertiaConfig = defineConfig({
         },
       }),
     errors: (ctx) => {
-      // Get all flash messages except 'notification'
-      const allErrors = ctx.session?.flashMessages.all()
-      const filteredErrors = Object.fromEntries(
-        Object.entries(allErrors || {}).filter(([key]) => key !== 'notification')
+      const errors = ctx.session?.flashMessages.get('errors') ?? {}
+      return Object.keys(errors).reduce(
+        (obj, key) => ({
+          ...obj,
+          [key]: errors[key].join(', '),
+        }),
+        {}
       )
-      return filteredErrors
     },
+    exceptions: (ctx) => ctx.session.flashMessages.get('errorsBag'),
     notification: (ctx) => ctx.session.flashMessages.get('notification'),
     tenant: (ctx) =>
       ctx.tenant.serialize({
@@ -54,7 +57,8 @@ declare module '@adonisjs/inertia/types' {
       image: string
       email: string
     }
-    errors: Record<string, any>
+    errors: Record<string, string>
+    exceptions: Record<string, string>
     notification: Record<string, string>
     tenant: {
       id: string
