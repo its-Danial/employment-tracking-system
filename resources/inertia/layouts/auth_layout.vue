@@ -1,5 +1,22 @@
 <script lang="ts" setup>
+import type { SharedProps } from '@adonisjs/inertia/types'
+import { usePage } from '@inertiajs/vue3'
+
+import { watch } from 'vue'
+
 import Toaster from '~/components/base/toast/Toaster.vue'
+import { toast } from '~/components/base/toast/use-toast'
+
+const page = usePage<SharedProps>()
+
+watch(
+  () => page.props.exceptions,
+  (newException) => {
+    if (newException && newException['E_INVALID_CREDENTIALS']) {
+      toast({ description: newException['E_INVALID_CREDENTIALS'], variant: 'destructive' })
+    }
+  }
+)
 </script>
 
 <template>
