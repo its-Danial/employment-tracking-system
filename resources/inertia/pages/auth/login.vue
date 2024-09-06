@@ -36,17 +36,30 @@ const handleSubmit = () => {
     </div>
     <form @submit.prevent="handleSubmit" class="grid gap-4">
       <div class="grid gap-2">
-        <Label for="email">Email</Label>
-        <Input id="email" type="email" placeholder="m@example.com" required v-model="form.email" />
+        <Label for="email" :error="form.errors.email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="m@example.com"
+          required
+          v-model="form.email"
+          :error="form.errors.email"
+        />
       </div>
       <div class="grid gap-2">
         <div class="flex items-center">
-          <Label for="password">Password</Label>
+          <Label for="password" :error="form.errors.password">Password</Label>
           <Link href="/forgot-password" class="ml-auto inline-block text-sm underline">
             Forgot your password?
           </Link>
         </div>
-        <Input id="password" type="password" required v-model="form.password" />
+        <Input
+          id="password"
+          type="password"
+          required
+          v-model="form.password"
+          :error="form.errors.password"
+        />
       </div>
       <div class="flex items-center space-x-2">
         <Checkbox id="remember-me" v-model:checked="form.rememberMe" />
@@ -63,7 +76,5 @@ const handleSubmit = () => {
       Don't have an account?
       <Link href="/register" class="underline"> Register </Link>
     </div>
-
-    <p v-if="form.errors" class="text-red-500">form: {{ form.errors }}</p>
   </div>
 </template>

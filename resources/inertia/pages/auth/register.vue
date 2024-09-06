@@ -38,21 +38,45 @@ const handleSubmit = () => {
     <form @submit.prevent="handleSubmit" class="grid gap-4">
       <div class="grid grid-cols-2 gap-4">
         <div class="grid gap-2">
-          <Label for="first-name">First name</Label>
-          <Input id="first-name" placeholder="Max" required v-model="form.firstName" />
+          <Label for="first-name" :error="form.errors.firstName">First name</Label>
+          <Input
+            id="first-name"
+            placeholder="Max"
+            required
+            v-model="form.firstName"
+            :error="form.errors.firstName"
+          />
         </div>
         <div class="grid gap-2">
-          <Label for="last-name">Last name</Label>
-          <Input id="last-name" placeholder="Robinson" required v-model="form.lastName" />
+          <Label for="last-name" :error="form.errors.lastName">Last name</Label>
+          <Input
+            id="last-name"
+            placeholder="Robinson"
+            required
+            v-model="form.lastName"
+            :error="form.errors.lastName"
+          />
         </div>
       </div>
       <div class="grid gap-2">
-        <Label for="email">Email</Label>
-        <Input id="email" type="email" placeholder="m@example.com" required v-model="form.email" />
+        <Label for="email" :error="form.errors.email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="m@example.com"
+          required
+          v-model="form.email"
+          :error="form.errors.email"
+        />
       </div>
       <div class="grid gap-2">
-        <Label for="password">Password</Label>
-        <Input id="password" type="password" v-model="form.password" />
+        <Label for="password" :error="form.errors.password">Password</Label>
+        <Input
+          id="password"
+          type="password"
+          v-model="form.password"
+          :error="form.errors.password"
+        />
       </div>
       <Button type="submit" class="w-full" :loading> Create an account </Button>
     </form>
