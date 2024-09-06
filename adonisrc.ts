@@ -51,6 +51,7 @@ export default defineConfig({
   preloads: [
     () => import('#start/routes/auth'),
     () => import('#start/routes/dashboard'),
+    () => import('#start/routes/candidates'),
     () => import('#start/kernel'),
     () => import('#start/rules/unique'),
   ],
