@@ -1,7 +1,7 @@
 // app/Validators/AuthValidator.ts
 import vine from '@vinejs/vine'
 
-export const nameRule = vine.string().maxLength(100).optional()
+export const nameRule = vine.string().minLength(2).maxLength(100).optional()
 export const emailRule = vine.string().email()
 export const passwordRule = vine.string().minLength(8)
 
