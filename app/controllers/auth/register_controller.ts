@@ -18,6 +18,6 @@ export default class RegistersController {
 
     await auth.use('web').login(user)
 
-    response.redirect().toRoute('home.index')
+    response.redirect().toRoute('dashboard.index')
   }
 }

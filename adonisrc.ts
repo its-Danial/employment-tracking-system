@@ -50,7 +50,7 @@ export default defineConfig({
   */
   preloads: [
     () => import('#start/routes/auth'),
-    () => import('#start/routes/home'),
+    () => import('#start/routes/dashboard'),
     () => import('#start/kernel'),
     () => import('#start/rules/unique'),
   ],

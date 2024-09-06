@@ -1,12 +1,12 @@
 /*
 |--------------------------------------------------------------------------
-| Home/Dashboard routes file
+| Dashboard routes file
 |--------------------------------------------------------------------------
 */
 import router from '@adonisjs/core/services/router'
 
 import { middleware } from '#start/kernel'
 
-const HomeController = () => import('#controllers/home_controller')
+const DashboardController = () => import('#controllers/dashboard_controller')
 
-router.get('/', [HomeController, 'index']).as('home.index').use(middleware.auth())
+router.get('/', [DashboardController, 'index']).as('dashboard.index').use(middleware.auth())

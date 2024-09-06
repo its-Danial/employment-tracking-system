@@ -14,6 +14,6 @@ export default class LoginController {
 
     await auth.use('web').login(user, rememberMe)
 
-    return response.redirect().toRoute('home.index')
+    return response.redirect().toRoute('dashboard.index')
   }
 }
