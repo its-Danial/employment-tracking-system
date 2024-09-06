@@ -5,7 +5,7 @@ import { Label, type LabelProps } from 'radix-vue'
 
 import { cn } from '#lib/utils'
 
-const props = defineProps<LabelProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<LabelProps & { error?: string; class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props
@@ -20,7 +20,8 @@ const delegatedProps = computed(() => {
     :class="
       cn(
         'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-        props.class
+        props.class,
+        { 'text-destructive': props.error }
       )
     "
   >
