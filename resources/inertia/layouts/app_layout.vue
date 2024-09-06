@@ -46,6 +46,11 @@ const navLinks = [
   { name: 'Agents', href: '/agents', icon: Handshake },
   { name: 'Settings', href: '/settings', icon: Settings },
 ]
+
+function isActiveLink(linkHref: string) {
+  const currentUrl = page.url
+  return currentUrl === linkHref || (linkHref !== '/' && currentUrl.startsWith(linkHref))
+}
 </script>
 
 <template>
@@ -68,7 +73,7 @@ const navLinks = [
               :href="link.href"
               class="flex items-center gap-3 rounded-lg px-3 py-2 transition-all"
               :class="
-                page.url.startsWith(link.href)
+                isActiveLink(link.href)
                   ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                   : 'text-muted-foreground hover:text-primary'
               "
@@ -119,7 +124,7 @@ const navLinks = [
                 :href="link.href"
                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2"
                 :class="
-                  page.url.startsWith(link.href)
+                  isActiveLink(link.href)
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                     : 'text-muted-foreground hover:text-foreground'
                 "
