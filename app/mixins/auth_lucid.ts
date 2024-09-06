@@ -93,13 +93,13 @@ export function withAuthFinder(
          * Fail when uid or the password are missing
          */
         if (!uid || !password) {
-          throw new errors.E_INVALID_CREDENTIALS('Invalid user credentials')
+          throw new errors.E_INVALID_CREDENTIALS('Please provide the all the required credentials')
         }
 
         const user = await this.findForAuth(options.uids, uid, tenantId)
         if (!user) {
           await hash().make(password)
-          throw new errors.E_INVALID_CREDENTIALS('Invalid user credentials')
+          throw new errors.E_INVALID_CREDENTIALS('User does not exist, please register an account')
         }
 
         const passwordHash = (user as any)[options.passwordColumnName]
