@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { router, usePage } from '@inertiajs/vue3'
+import { Link, router, usePage } from '@inertiajs/vue3'
 
 import { computed, watchEffect } from 'vue'
 
@@ -62,16 +62,20 @@ const navLinks = [
         </div>
         <div class="flex-1">
           <nav class="grid items-start space-y-1 px-2 py-2 text-sm font-medium lg:px-4">
-            <a
+            <Link
               v-for="link in navLinks"
               :key="link.name"
               :href="link.href"
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              :class="{ 'bg-primary text-primary-foreground': page.url.startsWith(link.href) }"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 transition-all"
+              :class="
+                page.url.startsWith(link.href)
+                  ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  : 'text-muted-foreground hover:text-primary'
+              "
             >
               <component :is="link.icon" class="h-4 w-4" />
               {{ link.name }}
-            </a>
+            </Link>
           </nav>
         </div>
         <div class="mt-auto p-4">
@@ -103,22 +107,26 @@ const navLinks = [
           </SheetTrigger>
           <SheetContent aria-describedby="nav-links" side="left" class="flex flex-col">
             <SheetHeader>
-              <a href="#" class="flex items-center gap-2 text-lg font-semibold">
+              <Link href="#" class="flex items-center gap-2 text-lg font-semibold">
                 <Package2 class="h-6 w-6" />
                 <span class="sr-only">Acme Inc</span>
-              </a>
+              </Link>
             </SheetHeader>
             <nav class="grid gap-2 text-lg font-medium">
-              <a
+              <Link
                 v-for="link in navLinks"
                 :key="link.name"
                 :href="link.href"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                :class="{ 'bg-primary text-primary-foreground': page.url.startsWith(link.href) }"
+                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2"
+                :class="
+                  page.url.startsWith(link.href)
+                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                    : 'text-muted-foreground hover:text-foreground'
+                "
               >
                 <component :is="link.icon" class="h-5 w-5" />
                 {{ link.name }}
-              </a>
+              </Link>
             </nav>
             <SheetFooter class="mt-auto">
               <Card>
