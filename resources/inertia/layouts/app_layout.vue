@@ -164,11 +164,11 @@ function isActiveLink(linkHref: string) {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Avatar v-if="user.image" class="cursor-pointer">
+            <Avatar v-if="user.image" id="user-avatar" class="cursor-pointer">
               <AvatarImage :src="user.image" :alt="user.firstName + ' ' + user.lastName" />
               <AvatarFallback>{{ user.firstName[0] + user.lastName[0] }}</AvatarFallback>
             </Avatar>
-            <Button v-else id="user-menu" variant="secondary" size="icon" class="rounded-full">
+            <Button v-else id="user-avatar" variant="secondary" size="icon" class="rounded-full">
               <CircleUser class="h-5 w-5" />
               <span class="sr-only">Toggle user menu</span>
             </Button>
