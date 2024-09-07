@@ -9,7 +9,4 @@ import { middleware } from '#start/kernel'
 
 const CandidatesController = () => import('#controllers/candidates_controller')
 
-router
-  .get('/candidates', [CandidatesController, 'index'])
-  .as('candidates.index')
-  .use(middleware.auth())
+router.resource('candidates', CandidatesController).use('*', middleware.auth())
