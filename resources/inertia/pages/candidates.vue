@@ -7,10 +7,11 @@ import { DateTime } from 'luxon'
 
 import type CandidatesController from '#controllers/candidates_controller'
 
-import DataIterator from '~/components/data-iterator/DataIterator.vue'
+import { DataIterator } from '~/components/data-iterator'
 
 defineProps<{
   paginatedCandidates: InferPageProps<CandidatesController, 'index'>['paginatedCandidates']
+  filters: InferPageProps<CandidatesController, 'index'>['filters']
 }>()
 </script>
 
@@ -24,7 +25,7 @@ defineProps<{
       :data="paginatedCandidates.data"
       :meta="paginatedCandidates.meta"
       :url="'/candidates'"
-      :response-key="'candidates'"
+      :filters
     >
       <template #data="{ data }">
         <Card class="relative flex flex-col justify-between">
