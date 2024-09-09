@@ -1,7 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
+import type { DataIteratorFilter } from '#lib/types/filter'
 import { PaginatedResult } from '#lib/types/pagination'
 import Candidate from '#models/candidate'
+import Skill from '#models/skill'
 
 export default class CandidatesController {
   /**
@@ -11,12 +13,13 @@ export default class CandidatesController {
     const page = request.input('page', 1)
     const limit = 20
 
-    const searchQuery = request.input('q', '').trim().toLowerCase()
+    const searchQuery = request.input('search', '').trim().toLowerCase()
 
     const candidatesQuery = Candidate.query()
       .where({ tenantId: tenant.id })
       .preload('skills')
       .preload('createdByUser')
+      .orderBy('first_name', 'asc') // TODO: make this configurable
 
     if (searchQuery) {
       candidatesQuery.where((query) => {
@@ -35,7 +38,23 @@ export default class CandidatesController {
       meta: { ...candidates.getMeta(), qs: request.qs() },
     }
 
-    return inertia.render('candidates', { paginatedCandidates: serializedPaginatedCandidates })
+    const skills = await Skill.query()
+      .where({ tenantId: tenant.id })
+      .select('id', 'name')
+      .orderBy('name', 'asc')
+
+    const filters: DataIteratorFilter[] = [
+      {
+        label: 'Skills',
+        queryKey: 'skills',
+        options: skills.map((skill) => ({ label: skill.name, value: String(skill.id) })),
+      },
+    ]
+
+    return inertia.render('candidates', {
+      paginatedCandidates: serializedPaginatedCandidates,
+      filters,
+    })
   }
 
   // /**
