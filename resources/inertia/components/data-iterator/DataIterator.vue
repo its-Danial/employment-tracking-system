@@ -46,9 +46,7 @@ watchEffect(() => {
 
 const loading = ref(false)
 
-// TODO: refactor all repeated GET logic
-const handlePageChange = (page: number) => {
-  query.value.page = String(page)
+const fetchData = () => {
   router.get(props.url, getSearchableQueries(), {
     preserveState: true,
     onStart: () => (loading.value = true),
@@ -56,23 +54,20 @@ const handlePageChange = (page: number) => {
   })
 }
 
+const handlePageChange = (page: number) => {
+  query.value.page = String(page)
+  fetchData()
+}
+
 const handleSearch = () => {
   resetPageCount()
-  router.get(props.url, getSearchableQueries(), {
-    preserveState: true,
-    onStart: () => (loading.value = true),
-    onFinish: () => (loading.value = false),
-  })
+  fetchData()
 }
 
 const handleFilterChange = (queryKey: string, value: string) => {
   query.value[queryKey] = value
   resetPageCount()
-  router.get(props.url, getSearchableQueries(), {
-    preserveState: true,
-    onStart: () => (loading.value = true),
-    onFinish: () => (loading.value = false),
-  })
+  fetchData()
 }
 
 // Note: Helper functions
@@ -81,45 +76,52 @@ function reshapeFiltersToQuery(
 ): Record<DataIteratorFilter['queryKey'], string | number> {
   return filters.reduce((acc, filter) => ({ ...acc, [filter.queryKey]: '' }), {})
 }
-
 // Reset page to 1 when searching or applying filters
 function resetPageCount() {
   query.value.page = '1'
 }
-
-// return only the queries that have values
+/*
+ * Return only the queries that have values
+ * and sort them to generate consistent caching url keys
+ */
 function getSearchableQueries(): Record<DataIteratorFilter['queryKey'], string | number> {
-  return Object.fromEntries(Object.entries(query.value).filter(([_key, value]) => !!value))
+  const entries = Object.entries(query.value).filter(([_key, value]) => !!value)
+  entries.sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+  return Object.fromEntries(entries)
 }
 </script>
 
 <template>
   <div class="flex h-full w-full flex-col">
     <!-- Toolbar -->
-    <div class="mb-4 flex items-center gap-2">
+    <div class="mb-4 flex items-center justify-between">
       <slot name="toolbar">
-        <Input
-          placeholder="Search using name, passport or phone number"
-          v-model="query.search"
-          class="h-8 w-full lg:w-[350px]"
-          @keydown.enter="handleSearch"
-          @click:clear="handleSearch"
-          clearable
-        />
-        <!-- Filters -->
-        <slot name="filters">
-          <template v-if="hasFilters">
-            <Filter
-              v-for="filter in filters"
-              :key="filter.label"
-              :label="filter.label"
-              :query-key="filter.queryKey"
-              :options="filter.options"
-              :model-value="query[filter.queryKey]"
-              @update:model-value="handleFilterChange(filter.queryKey, $event)"
-            />
-          </template>
-        </slot>
+        <div class="flex items-center gap-2">
+          <Input
+            placeholder="Search using name, passport or phone number"
+            v-model="query.search"
+            class="h-8 w-full lg:w-[350px]"
+            @keydown.enter="handleSearch"
+            @click:clear="handleSearch"
+            clearable
+          />
+          <!-- Filters -->
+          <slot name="filters">
+            <template v-if="hasFilters">
+              <Filter
+                v-for="filter in filters"
+                :key="filter.label"
+                :label="filter.label"
+                :query-key="filter.queryKey"
+                :options="filter.options"
+                :model-value="query[filter.queryKey]"
+                @update:model-value="handleFilterChange(filter.queryKey, $event)"
+              />
+            </template>
+          </slot>
+        </div>
+        <!-- Should be controlled by the parent component -->
+        <slot name="toolbar-actions" />
       </slot>
     </div>
     <div v-if="loading" class="flex flex-1 items-center justify-center">
