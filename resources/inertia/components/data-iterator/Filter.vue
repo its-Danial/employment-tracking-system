@@ -21,10 +21,21 @@ const handleFilterChange = (value: string) => {
   }
 }
 
+// sort values
+const sortMixed = (a: string, b: string) => {
+  const aNum = parseFloat(a)
+  const bNum = parseFloat(b)
+
+  if (!isNaN(aNum) && !isNaN(bNum)) {
+    return aNum - bNum
+  }
+  return a.localeCompare(b)
+}
+
 watch(
   selectedValues,
-  () => (model.value = Array.from(selectedValues.value).join(',')),
-  { deep: true } // need for Set data type
+  () => (model.value = Array.from(selectedValues.value).sort(sortMixed).join(',')),
+  { deep: true } // needed for Set data type
 )
 </script>
 
