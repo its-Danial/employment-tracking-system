@@ -12,8 +12,8 @@ export default class extends BaseSchema {
       table.string('first_name').notNullable()
       table.string('last_name').notNullable()
       table.string('email').nullable()
-      table.string('phone_number').nullable()
-      table.string('passport_number').nullable()
+      table.string('phone_number')
+      table.string('passport_number')
 
       table.text('experience').nullable()
       table.string('current_occupation').nullable()

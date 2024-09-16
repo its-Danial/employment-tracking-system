@@ -27,11 +27,10 @@ export default class Candidate extends BaseModel {
   declare email: string | null
 
   @column()
-  declare phoneNumber: string | null
+  declare phoneNumber: string
 
   @column()
-  declare passportNumber: string | null
-
+  declare passportNumber: string
   @column({ serializeAs: null })
   declare experience: string | null
 
