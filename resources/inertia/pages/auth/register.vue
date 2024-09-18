@@ -37,47 +37,42 @@ const handleSubmit = () => {
     </div>
     <form @submit.prevent="handleSubmit" class="grid gap-4">
       <div class="grid grid-cols-2 gap-4">
-        <div class="grid gap-2">
-          <Label for="first-name" :error="form.errors.firstName">First name</Label>
-          <Input
-            id="first-name"
-            placeholder="Max"
-            required
-            v-model="form.firstName"
-            :error="form.errors.firstName"
-          />
-        </div>
-        <div class="grid gap-2">
-          <Label for="last-name" :error="form.errors.lastName">Last name</Label>
-          <Input
-            id="last-name"
-            placeholder="Robinson"
-            required
-            v-model="form.lastName"
-            :error="form.errors.lastName"
-          />
-        </div>
-      </div>
-      <div class="grid gap-2">
-        <Label for="email" :error="form.errors.email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="m@example.com"
-          required
-          v-model="form.email"
-          :error="form.errors.email"
+        <FormInput
+          required="true"
+          id="first-name"
+          label="First name"
+          placeholder="Max"
+          type="text"
+          v-model="form.firstName"
+          :error="form.errors.firstName"
+        />
+        <FormInput
+          required="true"
+          id="last-name"
+          label="Last name"
+          placeholder="Robinson"
+          type="text"
+          v-model="form.lastName"
+          :error="form.errors.lastName"
         />
       </div>
-      <div class="grid gap-2">
-        <Label for="password" :error="form.errors.password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          v-model="form.password"
-          :error="form.errors.password"
-        />
-      </div>
+      <FormInput
+        required="true"
+        id="email"
+        label="Email"
+        placeholder="m@example.com"
+        type="email"
+        v-model="form.email"
+        :error="form.errors.email"
+      />
+      <FormInput
+        required="true"
+        id="password"
+        label="Password"
+        type="password"
+        v-model="form.password"
+        :error="form.errors.password"
+      />
       <Button type="submit" class="w-full" :loading> Create an account </Button>
     </form>
     <div class="text-center text-sm">
