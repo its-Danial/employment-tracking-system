@@ -5,7 +5,7 @@ import { cn } from '#lib/utils'
 
 const props = defineProps<{
   id: string
-  label: string
+  label?: string
   error?: string | undefined
   wrapperClass?: HTMLAttributes['class']
   labelClass?: HTMLAttributes['class']
