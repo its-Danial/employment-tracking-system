@@ -12,9 +12,7 @@ import type Candidate from '#models/candidate'
 import TagsCombobox from '~/components/base/form/FormTagsCombobox.vue'
 import { DataIterator } from '~/components/data-iterator'
 
-const props = defineProps<CandidatesControllerIndexProps>()
-
-console.log('props:', props.skills)
+defineProps<CandidatesControllerIndexProps>()
 
 const dialog = ref(false)
 const selectedCandidateId = ref<number | null>(null)
@@ -30,7 +28,7 @@ const createEditForm = useForm({
   previousOccupation: '',
   education: '',
   desiredOccupation: '',
-  skills: [],
+  skills: [] as string[],
 })
 
 const handleEditCandidateClick = async (candidate: ReturnType<Candidate['serialize']>) => {
@@ -46,6 +44,7 @@ const handleEditCandidateClick = async (candidate: ReturnType<Candidate['seriali
   createEditForm.previousOccupation = candidate.previousOccupation ?? ''
   createEditForm.education = candidate.education ?? ''
   createEditForm.desiredOccupation = candidate.desiredOccupation ?? ''
+  createEditForm.skills = candidate.skills.map(({ id }) => String(id))
 
   dialog.value = true
 }
@@ -62,12 +61,14 @@ const handleCreateEditCandidateSubmit = () => {
     createEditForm.put(`/candidates/${selectedCandidateId.value}`, {
       onSuccess: () => {
         dialog.value = false
+        createEditForm.reset()
       },
     })
   } else {
     createEditForm.post('/candidates', {
       onSuccess: () => {
         dialog.value = false
+        createEditForm.reset()
       },
     })
   }
@@ -147,90 +148,92 @@ const handleCreateEditCandidateSubmit = () => {
 
   <!-- create/edit dialog -->
   <Dialog v-model:open="dialog">
-    <DialogContent class="sm:max-w-[500px]">
-      <DialogHeader>
-        <DialogTitle>Create Candidate</DialogTitle>
-      </DialogHeader>
+    <DialogContent as-child class="sm:max-w-[800px]">
+      <form @submit.prevent="handleCreateEditCandidateSubmit">
+        <DialogHeader>
+          <DialogTitle>Create Candidate</DialogTitle>
+        </DialogHeader>
 
-      <form @submit.prevent="handleCreateEditCandidateSubmit" class="grid grid-cols-2 gap-4">
-        <FormInput
-          v-model="createEditForm.firstName"
-          id="firstName"
-          label="First Name"
-          :error="createEditForm.errors.firstName"
-          :required="true"
-        />
-        <FormInput
-          v-model="createEditForm.lastName"
-          id="lastName"
-          label="Last Name"
-          :error="createEditForm.errors.lastName"
-          :required="true"
-        />
-        <FormInput
-          v-model="createEditForm.email"
-          id="email"
-          label="Email"
-          :error="createEditForm.errors.email"
-          type="email"
-        />
-        <FormInput
-          v-model="createEditForm.phoneNumber"
-          id="phoneNumber"
-          label="Phone Number"
-          :error="createEditForm.errors.phoneNumber"
-          :required="true"
-        />
-        <FormInput
-          v-model="createEditForm.passportNumber"
-          id="passportNumber"
-          label="Passport Number"
-          :error="createEditForm.errors.passportNumber"
-          :required="true"
-        />
-        <FormInput
-          v-model="createEditForm.experience"
-          id="experience"
-          label="Experience"
-          :error="createEditForm.errors.experience"
-        />
-        <FormInput
-          v-model="createEditForm.currentOccupation"
-          id="currentOccupation"
-          label="Current Occupation"
-          :error="createEditForm.errors.currentOccupation"
-        />
-        <FormInput
-          v-model="createEditForm.previousOccupation"
-          id="previousOccupation"
-          label="Previous Occupation"
-          :error="createEditForm.errors.previousOccupation"
-        />
-        <FormInput
-          v-model="createEditForm.education"
-          id="education"
-          label="Education"
-          :error="createEditForm.errors.education"
-        />
-        <FormInput
-          v-model="createEditForm.desiredOccupation"
-          id="desiredOccupation"
-          label="Desired Occupation"
-          :error="createEditForm.errors.desiredOccupation"
-        />
-        <TagsCombobox
-          id="skills"
-          label="Skills"
-          wrapper-class="col-span-2"
-          :items="skills"
-          v-model="createEditForm.skills"
-          placeholder="Add skills"
-          :error="createEditForm.errors.skills"
-        />
+        <div class="grid grid-cols-2 gap-4">
+          <FormInput
+            v-model="createEditForm.firstName"
+            id="firstName"
+            label="First Name"
+            :error="createEditForm.errors.firstName"
+            :required="true"
+          />
+          <FormInput
+            v-model="createEditForm.lastName"
+            id="lastName"
+            label="Last Name"
+            :error="createEditForm.errors.lastName"
+            :required="true"
+          />
+          <FormInput
+            v-model="createEditForm.email"
+            id="email"
+            label="Email"
+            :error="createEditForm.errors.email"
+            type="email"
+          />
+          <FormInput
+            v-model="createEditForm.phoneNumber"
+            id="phoneNumber"
+            label="Phone Number"
+            :error="createEditForm.errors.phoneNumber"
+            :required="true"
+          />
+          <FormInput
+            v-model="createEditForm.passportNumber"
+            id="passportNumber"
+            label="Passport Number"
+            :error="createEditForm.errors.passportNumber"
+            :required="true"
+          />
+          <FormInput
+            v-model="createEditForm.experience"
+            id="experience"
+            label="Experience"
+            :error="createEditForm.errors.experience"
+          />
+          <FormInput
+            v-model="createEditForm.currentOccupation"
+            id="currentOccupation"
+            label="Current Occupation"
+            :error="createEditForm.errors.currentOccupation"
+          />
+          <FormInput
+            v-model="createEditForm.previousOccupation"
+            id="previousOccupation"
+            label="Previous Occupation"
+            :error="createEditForm.errors.previousOccupation"
+          />
+          <FormInput
+            v-model="createEditForm.education"
+            id="education"
+            label="Education"
+            :error="createEditForm.errors.education"
+          />
+          <FormInput
+            v-model="createEditForm.desiredOccupation"
+            id="desiredOccupation"
+            label="Desired Occupation"
+            :error="createEditForm.errors.desiredOccupation"
+          />
+          <TagsCombobox
+            id="skills"
+            label="Skills"
+            wrapper-class="col-span-2"
+            :items="skills"
+            v-model="createEditForm.skills"
+            placeholder="Add skills"
+            :error="createEditForm.errors.skills"
+          />
+        </div>
+        <DialogFooter>
+          <Button type="submit">create</Button>
+        </DialogFooter>
       </form>
-      <DialogFooter>
-        <Button type="submit">create</Button>
-      </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>
