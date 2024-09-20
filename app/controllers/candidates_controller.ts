@@ -5,6 +5,7 @@ import type { DataIteratorFilter } from '#lib/types/filter'
 import { PaginatedResult } from '#lib/types/pagination'
 import Candidate from '#models/candidate'
 import Skill from '#models/skill'
+import { candidateValidator } from '#validators/candidate'
 
 export type CandidatesControllerIndexProps = {
   paginatedCandidates: PaginatedResult<ReturnType<Candidate['serialize']>>
@@ -105,27 +106,33 @@ export default class CandidatesController {
     return inertia.render('candidates', responseData)
   }
 
-  // /**
-  //  * Display form to create a new candidate
-  //  */
-  // async create({ response }: HttpContext) {
-  //   return response.redirect().toRoute('candidates.index', { edit: true })
-  // }
+  /**
+   * Handle form submission for the create action
+   */
+  async store({ request, response, tenant, auth, session }: HttpContext) {
+    const { skills, ...data } = await request.validateUsing(candidateValidator(tenant.id))
 
-  // /**
-  //  * Handle form submission for the create action
-  //  */
-  // async store({ request }: HttpContext) {}
+    const candidate = await Candidate.create({
+      tenantId: tenant.id,
+      createdBy: auth.user!.id,
+      ...data,
+    })
+
+    if (skills && skills.length) {
+      await candidate.related('skills').attach(skills)
+    }
+
+    session.flash('notification', {
+      description: 'Candidate created successfully',
+      variant: 'success',
+    })
+    return response.redirect().toRoute('candidates.index')
+  }
 
   // /**
   //  * Show individual candidate
   //  */
   // async show({ params }: HttpContext) {}
-
-  // /**
-  //  * Edit individual candidate
-  //  */
-  // async edit({ params }: HttpContext) {}
 
   // /**
   //  * Handle form submission for the edit action
