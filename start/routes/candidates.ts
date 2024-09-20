@@ -9,4 +9,7 @@ import { middleware } from '#start/kernel'
 
 const CandidatesController = () => import('#controllers/candidates_controller')
 
-router.resource('candidates', CandidatesController).use('*', middleware.auth())
+router
+  .resource('candidates', CandidatesController)
+  .except(['create', 'edit'])
+  .use('*', middleware.auth())
