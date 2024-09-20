@@ -2,7 +2,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Link, router, usePage } from '@inertiajs/vue3'
 
-import { computed, watchEffect } from 'vue'
+import { computed, watch } from 'vue'
 
 import {
   BriefcaseBusiness,
@@ -28,9 +28,9 @@ const tenant = computed(() => page.props.tenant)
 
 const notification = computed(() => page.props.notification)
 
-watchEffect(() => {
-  if (!notification.value) return
-  toast({ title: notification.value.title, description: notification.value.message })
+watch(notification, (newValue) => {
+  if (!newValue) return
+  toast({ ...notification.value })
 })
 
 function logout() {
