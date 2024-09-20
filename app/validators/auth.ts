@@ -1,8 +1,8 @@
 // app/Validators/AuthValidator.ts
 import vine from '@vinejs/vine'
 
-export const nameRule = vine.string().minLength(2).maxLength(100).optional()
-export const emailRule = vine.string().email()
+import { emailRule, nameRule } from './common.js'
+
 export const passwordRule = vine.string().minLength(8)
 
 export const registerValidator = (tenantId: number) =>

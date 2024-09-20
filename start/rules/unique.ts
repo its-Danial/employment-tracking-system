@@ -1,4 +1,3 @@
-// isUnique macro with tenant-aware logic
 import db from '@adonisjs/lucid/services/db'
 import vine, { VineNumber, VineString } from '@vinejs/vine'
 import type { FieldContext } from '@vinejs/vine/types'
@@ -6,7 +5,7 @@ import type { FieldContext } from '@vinejs/vine/types'
 type Options = {
   table: string
   column: string
-  tenantId?: number // Optional tenant ID
+  tenantId: number
 }
 
 async function isUnique(value: unknown, options: Options, field: FieldContext) {
@@ -14,10 +13,8 @@ async function isUnique(value: unknown, options: Options, field: FieldContext) {
     return
   }
 
-  // Create a query to check for uniqueness
   const query = db.from(options.table).select(options.column).where(options.column, value)
 
-  // Add tenant condition if tenant information is provided
   if (options.tenantId) {
     query.andWhere('tenant_id', options.tenantId)
   }

@@ -55,6 +55,7 @@ export default defineConfig({
     () => import('#start/routes/candidates'),
     () => import('#start/kernel'),
     () => import('#start/rules/unique'),
+    () => import('#start/rules/exists'),
   ],
 
   /*
