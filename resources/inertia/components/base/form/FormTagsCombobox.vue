@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed, ref } from 'vue'
+import { type HTMLAttributes, computed, ref, watch } from 'vue'
 
 import {
   ComboboxAnchor,
@@ -11,8 +11,13 @@ import {
 
 import { cn } from '#lib/utils'
 
+interface Item {
+  label: string
+  value: string
+}
+
 const props = defineProps<{
-  items: { label: string; value: string }[]
+  items: Item[]
   id: string
   label: string
   error?: string | undefined
@@ -23,14 +28,46 @@ const props = defineProps<{
 
 defineOptions({ inheritAttrs: false })
 
-const model = defineModel<string[]>()
+const model = defineModel<string[]>({
+  required: true,
+})
+
+const selectedItems = ref<Item[]>([])
+
+// Sync internal selectedItems with model when model changes
+watch(
+  () => model.value,
+  (newModel) => {
+    // model value items need to be strings
+    selectedItems.value = props.items.filter((i) => newModel.includes(i.value))
+  },
+  { deep: true, immediate: true }
+)
+
+// Sync model when selectedItems changes
+watch(
+  () => selectedItems.value,
+  (newSelectedItems) => {
+    const newValues = newSelectedItems.map((i) => i.value)
+    // Update model only if the new values are different
+    if (model.value.toString() !== newValues.toString()) {
+      model.value = newValues
+    }
+  },
+  { deep: true }
+)
 
 const open = ref(false)
 const searchTerm = ref('')
 
-const filteredItems = computed(() => props.items.filter((i) => !model.value!.includes(i.label)))
+const filteredItems = computed(() =>
+  props.items.filter((i) => !selectedItems.value.find((s) => s.label === i.label))
+)
 
-// Function to open the menu when input is focused or clicked
+const removeItem = (item: Item) => {
+  selectedItems.value = selectedItems.value.filter((i) => i.label !== item.label)
+}
+
 const handleInputFocus = () => {
   open.value = true
 }
@@ -47,14 +84,14 @@ const handleInputFocus = () => {
 
     <TagsInput :id class="w-full gap-0 px-0" :model-value="model" v-bind="$attrs">
       <div class="flex flex-wrap items-center gap-2 px-3">
-        <TagsInputItem v-for="item in model" :key="item" :value="item">
+        <TagsInputItem v-for="item in selectedItems" :key="item.value" :value="item.label">
           <TagsInputItemText />
-          <TagsInputItemDelete />
+          <TagsInputItemDelete @click.stop.prevent="removeItem(item)" />
         </TagsInputItem>
       </div>
 
       <ComboboxRoot
-        v-model="model"
+        v-model="selectedItems"
         v-model:open="open"
         v-model:searchTerm="searchTerm"
         class="w-full"
@@ -63,7 +100,7 @@ const handleInputFocus = () => {
           <ComboboxInput :placeholder as-child>
             <TagsInputInput
               class="w-full px-3"
-              :class="model!.length > 0 ? 'mt-2' : ''"
+              :class="selectedItems!.length > 0 ? 'mt-2' : ''"
               @keydown.enter.prevent
               @focus="handleInputFocus"
               @click="handleInputFocus"
@@ -82,13 +119,11 @@ const handleInputFocus = () => {
                 <CommandItem
                   v-for="item in filteredItems"
                   :key="item.value"
-                  :value="item.label"
+                  :value="item"
                   @select.prevent="
                     (ev) => {
-                      if (typeof ev.detail.value === 'string') {
-                        searchTerm = ''
-                        model!.push(ev.detail.value)
-                      }
+                      searchTerm = ''
+                      selectedItems.push(ev.detail.value as Item)
 
                       if (filteredItems.length === 0) {
                         open = false
