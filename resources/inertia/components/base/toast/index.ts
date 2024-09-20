@@ -3,14 +3,14 @@ import type { HTMLAttributes } from 'vue'
 import { type VariantProps, cva } from 'class-variance-authority'
 import type { ToastRootProps } from 'radix-vue'
 
-export { default as Toaster } from './Toaster.vue'
 export { default as Toast } from './Toast.vue'
-export { default as ToastViewport } from './ToastViewport.vue'
 export { default as ToastAction } from './ToastAction.vue'
 export { default as ToastClose } from './ToastClose.vue'
-export { default as ToastTitle } from './ToastTitle.vue'
 export { default as ToastDescription } from './ToastDescription.vue'
+export { default as Toaster } from './Toaster.vue'
 export { default as ToastProvider } from './ToastProvider.vue'
+export { default as ToastTitle } from './ToastTitle.vue'
+export { default as ToastViewport } from './ToastViewport.vue'
 export { toast, useToast } from './use-toast'
 
 export const toastVariants = cva(
@@ -21,6 +21,7 @@ export const toastVariants = cva(
         default: 'border bg-background text-foreground',
         destructive:
           'destructive group border-destructive bg-destructive text-destructive-foreground',
+        success: 'group border-green-400 bg-green-400 text-white',
       },
     },
     defaultVariants: {
